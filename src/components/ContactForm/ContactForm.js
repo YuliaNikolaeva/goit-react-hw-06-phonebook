@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-// import PropTypes from 'prop-types';
-// import { addContact } from '../../redux/contacts/contacts-actions';
-import * as actions from '../../redux/contacts/contacts-actions';
+import contactActions from '../../redux/contacts/contacts-actions';
+import PropTypes from 'prop-types';
+
 import { v4 as uuidv4 } from 'uuid';
 
 import s from './ContactForm.module.css';
-
-console.log('импорт addContact', actions.addContact);
 
 class ContactForm extends Component {
     state = {
@@ -28,10 +26,7 @@ class ContactForm extends Component {
     submitContact = e => {
         e.preventDefault();
 
-        console.log('локальный стейт:', this.state);
-        console.log('OnSubmit в props:', this.props.OnSubmit());
-
-        this.props.OnSubmit(this.state);
+        this.props.onSubmit(this.state);
         this.reset();
     };
 
@@ -76,12 +71,13 @@ class ContactForm extends Component {
     }
 }
 
-const mapStateToProps = state => ({
-    contacts: state.contacts.items,
-});
-
 const mapDispatchToProps = dispatch => ({
-    onSubmit: (name, number) => dispatch(actions.addContact(name, number)),
+    onSubmit: newContact => dispatch(contactActions.addContact(newContact)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ContactForm);
+ContactForm.propTypes = {
+    name: PropTypes.string,
+    value: PropTypes.string,
+};
+
+export default connect(null, mapDispatchToProps)(ContactForm);
