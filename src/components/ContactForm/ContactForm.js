@@ -24,7 +24,26 @@ class ContactForm extends Component {
     };
 
     submitContact = e => {
+        const { contacts } = this.props;
+
         e.preventDefault();
+
+        const isCorrectInput =
+            this.state.name.length !== 0 && this.state.number.length !== 0;
+
+        if (!isCorrectInput) {
+            alert('One or more fields is full');
+            return;
+        }
+
+        const isNewContactDublicate = contacts.some(
+            contact => contact.name === this.state.name.trim(),
+        );
+
+        if (isNewContactDublicate) {
+            alert(`${this.state.name.trim()} is alredy in contacts`);
+            return;
+        }
 
         this.props.onSubmit(this.state);
         this.reset();
@@ -75,9 +94,15 @@ const mapDispatchToProps = dispatch => ({
     onSubmit: newContact => dispatch(contactActions.addContact(newContact)),
 });
 
+const mapStateToProps = state => {
+    return {
+        contacts: state.contacts.items,
+    };
+};
+
 ContactForm.propTypes = {
     name: PropTypes.string,
     value: PropTypes.string,
 };
 
-export default connect(null, mapDispatchToProps)(ContactForm);
+export default connect(mapStateToProps, mapDispatchToProps)(ContactForm);
