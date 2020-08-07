@@ -47,6 +47,7 @@ class ContactForm extends Component {
 
         this.props.onSubmit(this.state);
         this.reset();
+        localStorage.removeItem('not save contact');
     };
 
     reset = () => {
